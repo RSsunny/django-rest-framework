@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Teacher
 # Register your models here.
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subject', 'time', 'date', 'phone', 'email', 'address')
+    list_display = ('id','name', 'subject', 'time', 'date', 'phone', 'email', 'address')
     search_fields = ('name', 'subject')
     list_filter = ('subject',)
     ordering = ('name',)

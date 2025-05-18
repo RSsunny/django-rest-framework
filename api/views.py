@@ -50,4 +50,19 @@ def teacher_create(request):
         response= {'msg':'Data Not Created'}
         json_data=JSONRenderer().render(response)
         return HttpResponse(json_data, content_type='application/json')
-    return HttpResponse('Method Not Allowed')
+    if request.method == 'PUT':
+        data=request.body
+        # stream data
+        stream_data= io.BytesIO(data)
+        # python dict
+        python_data=JSONParser().parse(stream_data)
+        id= python_data.get('id')
+        id_match= Teacher.objects.get(id=id)
+        # serializer
+        serialized_data= TeacherSerializer(id_match, data=python_data, partial=True)
+        # validation   
+        if serialized_data.is_valid():
+            serialized_data.save()
+            response= {'msg':'Data Updated'}
+            json_data=JSONRenderer().render(response)
+            return HttpResponse(json_data, content_type='application.json')
