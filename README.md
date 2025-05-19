@@ -1,5 +1,7 @@
 ## <h1 align="center">Django Rest Framework</h1>
 
+## Django REST framework is a powerful and flexible toolkit for building Web APIs. Some reasons you might want to use REST framework:
+
 ### step by step guideline
 
 - setup virtual enviroment
@@ -58,17 +60,17 @@
 
 ## Serializers structure
 
-    ```
-        from rest_framework import serializers
-        from . models import Teacher
-        class TeacherSerializer(serializers.Serializer):
-            name= serializers.CharField(max_length=100)
-            subject= serializers.CharField(max_length=100)
-            time= serializers.TimeField()
-            date= serializers.DateField()
-            phone= serializers.CharField(max_length=15)
-            email= serializers.EmailField()
-            address= serializers.CharField(max_length=200)
-            def create(self, validated_data):
-                    return Teacher.objects.create(**validated_data)
-    ```
+```
+      from rest_framework import serializers
+      from . models import Teacher
+      class TeacherSerializer(serializers.Serializer):
+          name= serializers.CharField(max_length=100)
+          subject= serializers.CharField(max_length=100)
+          time= serializers.TimeField()
+          date= serializers.DateField()
+          phone= serializers.CharField(max_length=15)
+          email= serializers.EmailField()
+          address= serializers.CharField(max_length=200)
+          def create(self, validated_data):
+                  return Teacher.objects.create(**validated_data)
+```
