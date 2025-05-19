@@ -66,3 +66,16 @@ def teacher_create(request):
             response= {'msg':'Data Updated'}
             json_data=JSONRenderer().render(response)
             return HttpResponse(json_data, content_type='application.json')
+    if request.method == 'DELETE':
+        data=request.body
+        # stream data
+        stream_data=io.BytesIO(data)
+        # python dict
+        python_data=JSONParser().parse(stream_data)
+        id= python_data.get('id')
+        id_match= Teacher.objects.get(id=id)
+        id_match.delete()
+        response= {'msg':'Data Deleted'}
+        json_data=JSONRenderer().render(response)
+        return HttpResponse(json_data, content_type='application.json')
+        
