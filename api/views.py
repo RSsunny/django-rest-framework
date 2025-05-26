@@ -7,29 +7,32 @@ from django.http import HttpResponse
 import io
 from rest_framework.parsers import JSONParser
 # Create your views here.
-def teacher_list(request):
-    # complex data get
-    ts= Teacher.objects.all()
-    # python dict
-    serialized_data = TeacherSerializer(ts, many=True)
-    # json data
-    json_data = JSONRenderer().render(serialized_data.data)
-    # returning json data
-    return HttpResponse(json_data, content_type='application/json' ,)
 
 
-def SingleTeacher(request,id):
-    # complex data get
-    ts= Teacher.objects.get(id=id)
-    # python dict
-    serialized_data = TeacherSerializer(ts)
-    # json data
-    json_data = JSONRenderer().render(serialized_data.data)
-    # returning json data
-    return HttpResponse(json_data, content_type='application/json' ,)
+
 
 @csrf_exempt
-def teacher_create(request):
+def teacher_create(request,id=None):
+    if request.method == 'GET':
+        print(f'id: {id}')
+        if id is not None:
+            print(f'get id: {id}')
+            id_match= Teacher.objects.get(id=id)
+            # python dict
+            serialized_data = TeacherSerializer(id_match)
+            # json data
+            json_data = JSONRenderer().render(serialized_data.data)
+            # returning json data
+            return HttpResponse(json_data, content_type='application.json')
+       
+        # complex data get
+        ts = Teacher.objects.all()
+        # python dict
+        serialized_data = TeacherSerializer(ts, many=True)
+        # json data
+        json_data = JSONRenderer().render(serialized_data.data)
+        # returning json data
+        return HttpResponse(json_data, content_type='application.json')
     if request.method == 'POST':
         data= request.body
         print(f'data: {data}')
@@ -52,30 +55,35 @@ def teacher_create(request):
         return HttpResponse(json_data, content_type='application/json')
     if request.method == 'PUT':
         data=request.body
-        # stream data
+        # # stream data
         stream_data= io.BytesIO(data)
-        # python dict
+        # # python dict
         python_data=JSONParser().parse(stream_data)
         id= python_data.get('id')
+       
         id_match= Teacher.objects.get(id=id)
-        # serializer
+         # serializer
         serialized_data= TeacherSerializer(id_match, data=python_data, partial=True)
         # validation   
-        if serialized_data.is_valid():
+        if serialized_data.is_valid(): 
             serialized_data.save()
             response= {'msg':'Data Updated'}
             json_data=JSONRenderer().render(response)
             return HttpResponse(json_data, content_type='application.json')
     if request.method == 'DELETE':
-        data=request.body
-        # stream data
-        stream_data=io.BytesIO(data)
-        # python dict
-        python_data=JSONParser().parse(stream_data)
-        id= python_data.get('id')
-        id_match= Teacher.objects.get(id=id)
-        id_match.delete()
-        response= {'msg':'Data Deleted'}
-        json_data=JSONRenderer().render(response)
-        return HttpResponse(json_data, content_type='application.json')
+        if id is not None:
+            id_match= Teacher.objects.get(id=id)
+            print(f'id_match: {id_match}')
+            if not id_match:
+                response= {'msg':'Data not found for deletion'}
+                json_data=JSONRenderer().render(response)
+                return HttpResponse(json_data, content_type='application.json')
+            id_match.delete()
+            response= {'msg':'Data Deleted'}
+            json_data=JSONRenderer().render(response)
+            return HttpResponse(json_data, content_type='application.json')
+        
+          
+        
+        
         
