@@ -11,6 +11,12 @@ from rest_framework.parsers import JSONParser
 
 
 
+def welcome_page(request):
+    res= {'Django Rest Framework': 'surver is running port 8000'}
+    jsonData = JSONRenderer().render(res)
+    return HttpResponse(jsonData, content_type='application/json')
+        
+        
 @csrf_exempt
 def teacher_create(request,id=None):
     if request.method == 'GET':
@@ -84,6 +90,4 @@ def teacher_create(request,id=None):
             return HttpResponse(json_data, content_type='application.json')
         
           
-        
-        
         

@@ -15,3 +15,11 @@ class BlogList(APIView):
             blogs= Blog.objects.all()
             serializer= BlogSerializer(blogs, many=True)
             return Response(serializer.data)
+    def post(self, request, *args, **kwargs):
+        # Create a new blog post
+        serializer= BlogSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            res={'msg':'Blog created successfully'}
+            return Response(res, status=201)
+        return Response(serializer.errors, status=400)
