@@ -16,12 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path ,include
-
+from rest_framework.routers import DefaultRouter
+from book import views 
+router= DefaultRouter()
+#register your viewsets here if you have any
+router.register('books', views.BookCrudView, basename='book')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('', include(router.urls)),  # Include the router URLs
     path('', include('api.urls')),
     path('', include('product.urls')),
     path('', include('blog.urls')),
-    path('', include('user.urls'))
+    path('', include('user.urls')),
+    path('', include('doc.urls'))
 ]
